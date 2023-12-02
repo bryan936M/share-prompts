@@ -6,10 +6,10 @@ import { useSession, signIn, signOut, getProviders } from "next-auth/react";
 
 
 const Nav = () => {
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
-
+  console.log(session);
   useEffect(() => {
     const fetchProviders = async () => {
       const providers = await getProviders();
@@ -31,24 +31,26 @@ const Nav = () => {
         />
         <p className="logo_text">Promptopia</p>
       </Link>
-
+      
       {/* Desktop Navigation */}
-      <div className="sm:flex hidden">
-        {isUserLoggedIn ? (
-          <div className="flex gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
+      <div className='sm:flex hidden'>
+        {session?.user ? (
+          <div className='flex gap-3 md:gap-5'>
+            <Link href='/create-prompt' className='black_btn'>
               Create Post
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
+
+            <button type='button' onClick={signOut} className='outline_btn'>
               Sign Out
             </button>
-            <Link href="/profile">
+
+            <Link href='/profile'>
               <Image
-                src="/assets/images/logo.svg"
-                alt="Profile"
+                src={session?.user.image}
                 width={37}
                 height={37}
-                className="rounded-full"
+                className='rounded-full'
+                alt='profile'
               />
             </Link>
           </div>
@@ -72,10 +74,10 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div>
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               alt="profile"
               width={37}
               height={37}
@@ -86,7 +88,7 @@ const Nav = () => {
             {toggleDropdown && (
               <div className="dropdown">
                 <Link
-                  href="/profile"
+                  href="/blue"
                   className="dropdown_link"
                   onClick={() => setToggleDropdown(false)}
                 >
@@ -103,10 +105,12 @@ const Nav = () => {
                   type="button"
                   className="black_btn w-full mt-5"
                   onClick={() => {
-                    setToggleDropdown(false)
-                    signOut()
+                    setToggleDropdown(false);
+                    signOut();
                   }}
-                >Sign Out</button>
+                >
+                  Sign Out
+                </button>
               </div>
             )}
           </div>
