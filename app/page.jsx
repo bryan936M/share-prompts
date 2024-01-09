@@ -1,5 +1,8 @@
 import Feed from '@/components/Feed'
 
+export const revalidate=0 // or low number
+export const dynamic = "force-dynamic";
+
 const Home = () => {
   return (
     <section className="w-full flex-center flex-col">

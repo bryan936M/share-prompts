@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react";
 import PromptCard from "./PromptCard";
 
+ // default false
+ export const revalidate=0 // or low number
+ export const dynamic = "force-dynamic";
+
 const PromptCardList = ({ data, handleTagclick }) => {
   return (
     <div className="mt-16 prompt_layout">
@@ -21,17 +25,18 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const handleSearchChange = (e) => {};
 
-  const fetchPosts = async () => {
-    const response = await fetch("/api/prompt");
-    const data = await response.json();
-    setPosts(data);
-  };
-
+  
   useEffect(() => {
     // fetch posts
+    const fetchPosts = async () => {
+      const host = process.env.NEXTAUTH_URL;
+      const response = await fetch('/api/prompt', { cache: 'no-store' });
+      const data = await response.json();
+      setPosts(data);
+      console.log(new Date(new Date().getTime()).toLocaleString(), data);
+    };
     fetchPosts();
   }, []);
-  
   return (
     <section className="feed">
       <form className="relative w-full flex-center">
