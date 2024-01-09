@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Form from "@/components/Form";
+import { revalidatePath } from "next/cache";
 
 function EditPrompt() {
   const [submitting, setSubmitting] = useState(false);
@@ -44,7 +45,8 @@ function EditPrompt() {
           tag: post.tag,
         }),
       });
-
+      // revalidatePath("/api/prompt")
+      revalidatePath("/")
       if (response.ok) router.push("/");
       
     } catch (error) {

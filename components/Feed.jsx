@@ -30,7 +30,9 @@ const Feed = () => {
     // fetch posts
     const fetchPosts = async () => {
       const host = process.env.NEXTAUTH_URL;
-      const response = await fetch('/api/prompt', { cache: 'no-store' });
+      const response = await fetch('/api/prompt', { next: {
+      revalidate: 10,
+      } });
       const data = await response.json();
       setPosts(data);
       console.log(new Date(new Date().getTime()).toLocaleString(), data);
