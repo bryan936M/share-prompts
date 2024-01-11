@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Form from "@/components/Form";
-import { revalidatePath } from "next/cache";
 
 function CreatePrompt() {
   const [submitting, setSubmitting] = useState(false);
@@ -29,8 +28,13 @@ function CreatePrompt() {
         }),
       });
 
-      revalidatePath("/")
-      // revalidatePath("/api/prompt")
+      await fetch("api/revalidate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ path: "/" }),
+      });
+
+      router.refresh();
       if (response.ok) router.push("/");
     } catch (error) {
       console.log(error);
